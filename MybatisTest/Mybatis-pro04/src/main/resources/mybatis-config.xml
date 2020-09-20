@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<!--configuration核心配置文件-->
+<configuration>
+
+    <!--引入外部配置文件-->
+    <properties resource="db.properties"/>
+
+    <settings>
+        <!--标准日志模式-->
+        <!--<setting name="logImpl" value="STDOUT_LOGGING"/>-->
+        <!--设置为log4j模式-->
+        <setting name="logImpl" value="LOG4J"/>
+    </settings>
+
+    <!--给实体类起别名-->
+    <typeAliases>
+        <!--直接指定实体类起别名-->
+        <typeAlias type="com.mou.pojo.User" alias="User"/>
+        <!--指定包,自动搜索包下面所需的JavaBean,别名为包下实体类首字母小写-->
+        <!--<package name="com.mou.pojo"/>-->
+    </typeAliases>
+
+    <!--enviroment可以配置多个，default指定生效的环境是哪一个-->
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="${driver}"/>
+                <property name="url" value="${url}"/>
+                <property name="username" value="${username}"/>
+                <property name="password" value="${password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+    <!--每一个Mapper.xml都需要在Mybatis的核心配置文件中注册-->
+    <!--resource配置路径需要用'/',而不是'.'-->
+    <mappers>
+        <mapper resource="com/mou/mapper/UserMapper.xml"/>
+    </mappers>
+</configuration>

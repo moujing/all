@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--configuration核心配置文件-->
+<mapper namespace="com.mou.mapper.BlogMapper">
+    <!--代码复用-->
+    <sql id="if-title-author">
+        <if test="title != null">
+            and title = #{title}
+        </if>
+        <if test="author != null">
+            and author = #{author}
+        </if>
+        <if test="views != null">
+            and views = #{views}
+        </if>
+    </sql>
+
+    <insert id="addBlog" parameterType="Blog">
+        insert into blog (id,title,author,create_time,views)
+        values (#{id},#{title},#{author},#{createTime},#{views});
+    </insert>
+    
+    <select id="selectBlogIf" parameterType="map" resultType="blog">
+        select * from blog
+        <where>
+            <!--复用代码的引用-->
+            <include refid="if-title-author"></include>
+        </where>
+
+    </select>
+
+    <select id="selectBlogWhen" parameterType="map" resultType="blog">
+        select * from blog
+        <where>
+            <choose>
+                <otherwise>
+                    and views = #{views}
+                </otherwise>
+            </choose>
+        </where>
+    </select>
+
+    <select id="queryBlogForeach" parameterType="map" resultType="blog">
+        select * from blog
+        <where>
+            <foreach collection="ids" item="idInList" open="and (" close=")" separator="or">
+                id = #{idInList}
+            </foreach>
+        </where>
+    </select>
+</mapper>
